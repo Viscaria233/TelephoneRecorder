@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_filter"
+            android:icon="@android:drawable/ic_menu_edit"
+            android:title="Filter"
+            android:checked="true"/>
+        <item
+            android:id="@+id/nav_record"
+            android:icon="@android:drawable/ic_menu_save"
+            android:title="Record" />
+        <item
+            android:id="@+id/nav_history"
+            android:icon="@android:drawable/ic_menu_recent_history"
+            android:title="History" />
+    </group>
+    <item
+        android:id="@+id/nav_setting"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="Setting" />
+    <item
+        android:id="@+id/nav_help"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="Help" />
+    <item
+        android:id="@+id/nav_about"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="About" />
+
+</menu>
