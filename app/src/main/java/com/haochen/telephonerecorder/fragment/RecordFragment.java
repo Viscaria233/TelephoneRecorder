@@ -39,10 +39,6 @@ public class RecordFragment extends MyFragment {
 
     private boolean isDragging = false;
 
-    public RecordFragment(MyAdapter adapter) {
-        super(adapter);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

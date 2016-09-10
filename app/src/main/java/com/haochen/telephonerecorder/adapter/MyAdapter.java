@@ -150,9 +150,6 @@ public abstract class MyAdapter<T> extends BaseAdapter {
     public abstract Bundle getDataBundle();
 
     public abstract class MyBatchFragment extends BaseBatchFragment {
-        public MyBatchFragment(Context context) {
-            super(context);
-        }
 
         @Nullable
         @Override

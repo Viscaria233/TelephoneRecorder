@@ -23,10 +23,6 @@ public class EditPhoneFragment extends EditFragment {
     private EditText name;
     private EditText tel;
 
-    public EditPhoneFragment(Bundle data) {
-        super(data);
-    }
-
     @Override
     public boolean checkAvailable(String origin) {
         String t = tel.getText().toString();

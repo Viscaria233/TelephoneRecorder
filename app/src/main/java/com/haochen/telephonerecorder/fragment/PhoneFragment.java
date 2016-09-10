@@ -27,10 +27,6 @@ import java.sql.ResultSet;
  */
 public class PhoneFragment extends MyFragment {
 
-    public PhoneFragment(MyAdapter adapter) {
-        super(adapter);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

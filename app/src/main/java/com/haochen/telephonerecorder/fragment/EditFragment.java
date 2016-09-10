@@ -10,7 +10,7 @@ public abstract class EditFragment extends Fragment {
 
     protected Bundle data;
 
-    public EditFragment(Bundle data) {
+    public void setData(Bundle data) {
         this.data = data;
     }
 

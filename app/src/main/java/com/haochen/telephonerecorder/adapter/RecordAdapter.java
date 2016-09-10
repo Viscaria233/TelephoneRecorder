@@ -80,7 +80,7 @@ public class RecordAdapter extends MyAdapter<RecordAdapter.Record> {
 
     @Override
     public BaseBatchFragment createBatchFragment() {
-        return new RecordBatchFragment(context);
+        return new RecordBatchFragment();
     }
 
     @Override
@@ -164,9 +164,6 @@ public class RecordAdapter extends MyAdapter<RecordAdapter.Record> {
     }
 
     public class RecordBatchFragment extends MyBatchFragment {
-        public RecordBatchFragment(Context context) {
-            super(context);
-        }
 
         @Override
         public void onCheckedNumberChange(int checkedNumber) {

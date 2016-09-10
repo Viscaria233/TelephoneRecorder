@@ -70,7 +70,7 @@ public class HistoryAdapter extends DBAdapter<HistoryAdapter.History> {
 
     @Override
     public BaseBatchFragment createBatchFragment() {
-        return new HistoryBatchFragment(context);
+        return new HistoryBatchFragment();
     }
 
     @Override
@@ -126,8 +126,8 @@ public class HistoryAdapter extends DBAdapter<HistoryAdapter.History> {
 
     public class HistoryBatchFragment extends MyBatchFragment {
 
-        public HistoryBatchFragment(Context context) {
-            super(context);
+        public HistoryBatchFragment() {
+            super();
             edit.setVisibility(View.INVISIBLE);
         }
 

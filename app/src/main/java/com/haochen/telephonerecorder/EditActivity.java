@@ -29,11 +29,12 @@ public class EditActivity extends AppCompatActivity {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         switch (bundle.getInt("type")) {
             case Config.EditType.PHONE:
-                fragment = new EditPhoneFragment(bundle);
+                fragment = new EditPhoneFragment();
+                fragment.setData(bundle);
                 break;
             case Config.EditType.RECORD:
-                fragment = new EditRecordFragment(bundle);
-                break;
+                fragment = new EditRecordFragment();
+                fragment.setData(bundle);
         }
         ft.replace(R.id.content_edit, fragment);
         ft.commit();

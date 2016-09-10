@@ -38,14 +38,6 @@ public abstract class BaseBatchFragment extends Fragment implements OnCheckedNum
     protected FloatingActionButton edit;
     protected FloatingActionButton delete;
 
-    public BaseBatchFragment(Context context) {
-        view = LayoutInflater.from(context).inflate(R.layout.layout_batch_button, null);
-        allCheck = (FloatingActionButton) view.findViewById(R.id.fab_all_check);
-        allCancel = (FloatingActionButton) view.findViewById(R.id.fab_all_cancel);
-        edit = (FloatingActionButton) view.findViewById(R.id.fab_edit);
-        delete = (FloatingActionButton) view.findViewById(R.id.fab_delete);
-    }
-
     public void setOnAllCheckClickListener(OnAllCheckClickListener onAllCheckClickListener) {
         this.onAllCheckClickListener = onAllCheckClickListener;
     }
@@ -69,6 +61,11 @@ public abstract class BaseBatchFragment extends Fragment implements OnCheckedNum
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_batch_button, null);
+        allCheck = (FloatingActionButton) view.findViewById(R.id.fab_all_check);
+        allCancel = (FloatingActionButton) view.findViewById(R.id.fab_all_cancel);
+        edit = (FloatingActionButton) view.findViewById(R.id.fab_edit);
+        delete = (FloatingActionButton) view.findViewById(R.id.fab_delete);
         allCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

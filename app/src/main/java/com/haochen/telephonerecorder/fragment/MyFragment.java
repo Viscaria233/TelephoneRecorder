@@ -13,8 +13,7 @@ public abstract class MyFragment extends Fragment {
 
     protected MyAdapter adapter;
 
-    public MyFragment(MyAdapter adapter) {
+    public void setAdapter(MyAdapter adapter) {
         this.adapter = adapter;
     }
-
 }

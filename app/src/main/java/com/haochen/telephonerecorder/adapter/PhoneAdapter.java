@@ -99,7 +99,7 @@ public class PhoneAdapter extends DBAdapter<PhoneAdapter.Phone> {
 
     @Override
     public BaseBatchFragment createBatchFragment() {
-        return new PhoneBatchFragment(context);
+        return new PhoneBatchFragment();
     }
 
     @Override
@@ -171,9 +171,6 @@ public class PhoneAdapter extends DBAdapter<PhoneAdapter.Phone> {
     }
 
     public class PhoneBatchFragment extends MyBatchFragment {
-        public PhoneBatchFragment(Context context) {
-            super(context);
-        }
 
         @Override
         public void onCheckedNumberChange(int checkedNumber) {

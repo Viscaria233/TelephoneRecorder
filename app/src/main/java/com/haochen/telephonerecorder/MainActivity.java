@@ -29,6 +29,7 @@ import com.haochen.telephonerecorder.callback.OnEditClickListener;
 import com.haochen.telephonerecorder.common.Config;
 import com.haochen.telephonerecorder.fragment.BaseBatchFragment;
 import com.haochen.telephonerecorder.fragment.HistoryFragment;
+import com.haochen.telephonerecorder.fragment.MyFragment;
 import com.haochen.telephonerecorder.fragment.PhoneFragment;
 import com.haochen.telephonerecorder.fragment.RecordFragment;
 import com.haochen.telephonerecorder.receiver.OutgoingCallReceiver;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     private MyAdapter recordAdapter;
     private MyAdapter historyAdapter;
 
-    private Fragment selectedFragment;
+    private MyFragment selectedFragment;
     private BaseBatchFragment batchFragment;
 
     @Override
@@ -152,6 +153,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            showSettingView();
             return true;
         }
 
@@ -189,7 +191,8 @@ public class MainActivity extends AppCompatActivity
         adapter.checkAndUpdate();
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(null);
-        selectedFragment = new PhoneFragment(adapter);
+        selectedFragment = new PhoneFragment();
+        selectedFragment.setAdapter(adapter);
         batchFragment = null;
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.content_button_bar, selectedFragment);
@@ -219,7 +222,8 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-        selectedFragment = new RecordFragment(adapter);
+        selectedFragment = new RecordFragment();
+        selectedFragment.setAdapter(adapter);
         batchFragment = null;
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.content_button_bar, selectedFragment);
@@ -233,7 +237,8 @@ public class MainActivity extends AppCompatActivity
         adapter.checkAndUpdate();
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(null);
-        selectedFragment = new HistoryFragment(adapter);
+        selectedFragment = new HistoryFragment();
+        selectedFragment.setAdapter(adapter);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.content_button_bar, selectedFragment);
         ft.commit();

@@ -22,10 +22,6 @@ public class EditRecordFragment extends EditFragment {
 
     private EditText name;
 
-    public EditRecordFragment(Bundle data) {
-        super(data);
-    }
-
     @Override
     public boolean checkAvailable(String origin) {
         return true;
