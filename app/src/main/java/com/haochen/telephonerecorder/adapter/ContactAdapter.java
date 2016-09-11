@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +14,18 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.haochen.telephonerecorder.R;
+import com.haochen.telephonerecorder.common.Contact;
 import com.haochen.telephonerecorder.fragment.BaseBatchFragment;
 import com.haochen.telephonerecorder.struct.CheckableItem;
 import com.haochen.telephonerecorder.util.DBHelper;
 import com.haochen.telephonerecorder.util.IdBuilder;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Haochen on 2016/7/13.
  */
-public class ContactAdapter extends MyAdapter<ContactAdapter.Contact> {
+public class ContactAdapter extends MyAdapter<Contact> {
 
     private String[] tels;
 
@@ -66,7 +65,7 @@ public class ContactAdapter extends MyAdapter<ContactAdapter.Contact> {
 
     @Override
     protected void getDataSet() {
-        list.clear();
+        data.clear();
         ContentResolver cr = context.getContentResolver();
         Cursor cursor = cr.query(
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -80,9 +79,9 @@ public class ContactAdapter extends MyAdapter<ContactAdapter.Contact> {
         Contact contact;
         while (cursor.moveToNext()) {
             contact = new Contact();
-            contact.tel = cursor.getString(0);
-            contact.name = cursor.getString(1);
-            list.add(new CheckableItem<Contact>(contact, false));
+            contact.setTel(cursor.getString(0));
+            contact.setName(cursor.getString(1));
+            data.add(new CheckableItem<>(contact, false));
         }
         cursor.close();
     }
@@ -117,7 +116,7 @@ public class ContactAdapter extends MyAdapter<ContactAdapter.Contact> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        final CheckableItem<Contact> item = list.get(position);
+        final CheckableItem<Contact> item = data.get(position);
         final Contact contact = item.getValue();
         final View view = convertView;
         viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
@@ -125,7 +124,7 @@ public class ContactAdapter extends MyAdapter<ContactAdapter.Contact> {
             public void onClick(View v) {
                 boolean exists = false;
                 for (String s : tels) {
-                    if (s.endsWith(contact.tel) || contact.tel.endsWith(s)) {
+                    if (s.endsWith(contact.getTel()) || contact.getTel().endsWith(s)) {
                         exists = true;
                         break;
                     }
@@ -148,8 +147,8 @@ public class ContactAdapter extends MyAdapter<ContactAdapter.Contact> {
             }
         });
         viewHolder.checkBox.setChecked(item.isChecked());
-        viewHolder.name.setText(contact.name);
-        viewHolder.tel.setText(contact.tel);
+        viewHolder.name.setText(contact.getName());
+        viewHolder.tel.setText(contact.getTel());
         return convertView;
     }
 
@@ -159,16 +158,4 @@ public class ContactAdapter extends MyAdapter<ContactAdapter.Contact> {
         TextView tel;
     }
 
-    public static class Contact implements Serializable {
-        String name;
-        String tel;
-
-        public String getName() {
-            return name;
-        }
-
-        public String getTel() {
-            return tel;
-        }
-    }
 }

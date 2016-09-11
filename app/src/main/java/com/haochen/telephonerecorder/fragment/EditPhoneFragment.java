@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.haochen.telephonerecorder.R;
-import com.haochen.telephonerecorder.callback.OnEditCommitListener;
-import com.haochen.telephonerecorder.common.Config;
 import com.haochen.telephonerecorder.util.DBHelper;
 
 /**
@@ -33,8 +31,9 @@ public class EditPhoneFragment extends EditFragment {
         DBHelper helper = DBHelper.getInstance(null);
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM phone WHERE tel NOT LIKE ? AND tel LIKE ?",
-                new String[]{"%" + origin, "%" + t});
+                new String[]{origin, t});
         boolean exist = cursor.moveToNext();
+        cursor.close();
         db.close();
         if (exist) {
             Snackbar.make(tel, "This tel is already exists.", Snackbar.LENGTH_LONG).show();

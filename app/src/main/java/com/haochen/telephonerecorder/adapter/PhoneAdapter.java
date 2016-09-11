@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 
 import com.haochen.telephonerecorder.R;
 import com.haochen.telephonerecorder.common.Config;
+import com.haochen.telephonerecorder.common.Phone;
 import com.haochen.telephonerecorder.fragment.BaseBatchFragment;
 import com.haochen.telephonerecorder.struct.CheckableItem;
 import com.haochen.telephonerecorder.util.DBHelper;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 /**
  * Created by Haochen on 2016/6/30.
  */
-public class PhoneAdapter extends DBAdapter<PhoneAdapter.Phone> {
+public class PhoneAdapter extends DBAdapter<Phone> {
 
     public PhoneAdapter(Context context) {
         super(context, new ArrayList<CheckableItem<Phone>>(), "phone");
@@ -49,19 +49,19 @@ public class PhoneAdapter extends DBAdapter<PhoneAdapter.Phone> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        final CheckableItem<Phone> item = list.get(position);
+        final CheckableItem<Phone> item = data.get(position);
         final Phone phone = item.getValue();
-        viewHolder.name.setText(phone.name);
-        viewHolder.tel.setText(phone.tel);
+        viewHolder.name.setText(phone.getName());
+        viewHolder.tel.setText(phone.getTel());
         viewHolder.call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone.tel));
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone.getTel()));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });
-        viewHolder.enabled.setChecked(phone.enabled);
+        viewHolder.enabled.setChecked(phone.isEnabled());
         if (Config.BATCH_MODE) {
             viewHolder.checkBox.setVisibility(View.VISIBLE);
             viewHolder.checkBox.setChecked(item.isChecked());
@@ -88,7 +88,7 @@ public class PhoneAdapter extends DBAdapter<PhoneAdapter.Phone> {
                     DBHelper helper = DBHelper.getInstance(null);
                     SQLiteDatabase db = helper.getWritableDatabase();
                     db.execSQL("UPDATE phone SET enabled = ? WHERE _id = ?",
-                            new Object[]{((Switch)v).isChecked() ? 1 : 0, phone.id});
+                            new Object[]{((Switch)v).isChecked() ? 1 : 0, phone.getId()});
                     db.close();
                     Config.Changed.PHONE = true;
                 }
@@ -99,17 +99,35 @@ public class PhoneAdapter extends DBAdapter<PhoneAdapter.Phone> {
 
     @Override
     public BaseBatchFragment createBatchFragment() {
-        return new PhoneBatchFragment();
+        return new MyBatchFragment() {
+            @Override
+            public void onCheckedNumberChange(int checkedNumber) {
+                switch (checkedNumber) {
+                    case 0:
+                        edit.setVisibility(View.INVISIBLE);
+                        delete.setVisibility(View.INVISIBLE);
+                        break;
+                    case 1:
+                        edit.setVisibility(View.VISIBLE);
+                        delete.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        edit.setVisibility(View.INVISIBLE);
+                        delete.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+        };
     }
 
     @Override
     protected void physicalDelete(int position) {
-        if (position < 0 || position >= list.size()) {
+        if (position < 0 || position >= data.size()) {
             return;
         }
-        CheckableItem item = list.get(position);
+        CheckableItem item = data.get(position);
         db.execSQL("DELETE FROM " + tableName + " WHERE _id = ?",
-                new Object[]{((Phone) item.getValue()).id});
+                new Object[]{((Phone) item.getValue()).getId()});
     }
 
     @Override
@@ -119,18 +137,18 @@ public class PhoneAdapter extends DBAdapter<PhoneAdapter.Phone> {
 
     @Override
     protected void getDataSet() {
-        list.clear();
+        data.clear();
         DBHelper helper = DBHelper.getInstance(null);
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT _id, name, tel, enabled FROM " + tableName, null);
         Phone phone;
         while (cursor.moveToNext()) {
             phone = new Phone();
-            phone.id = cursor.getString(0);
-            phone.name = cursor.getString(1);
-            phone.tel = cursor.getString(2);
-            phone.enabled = cursor.getInt(3) == 1;
-            list.add(new CheckableItem<Phone>(phone, false));
+            phone.setId(cursor.getString(0));
+            phone.setName(cursor.getString(1));
+            phone.setTel(cursor.getString(2));
+            phone.setEnabled(cursor.getInt(3) == 1);
+            data.add(new CheckableItem<>(phone, false));
         }
         db.close();
     }
@@ -147,11 +165,11 @@ public class PhoneAdapter extends DBAdapter<PhoneAdapter.Phone> {
         }
         Bundle bundle = new Bundle();
         int index = getCheckedIndexArray()[0];
-        Phone phone = list.get(index).getValue();
+        Phone phone = data.get(index).getValue();
         bundle.putInt("type", Config.EditType.PHONE);
-        bundle.putString("id", phone.id);
-        bundle.putString("name", phone.name);
-        bundle.putString("tel", phone.tel);
+        bundle.putString("id", phone.getId());
+        bundle.putString("name", phone.getName());
+        bundle.putString("tel", phone.getTel());
         return bundle;
     }
 
@@ -161,34 +179,6 @@ public class PhoneAdapter extends DBAdapter<PhoneAdapter.Phone> {
         TextView tel;
         ImageButton call;
         Switch enabled;
-    }
-
-    public static class Phone {
-        String id;
-        String name;
-        String tel;
-        boolean enabled;
-    }
-
-    public class PhoneBatchFragment extends MyBatchFragment {
-
-        @Override
-        public void onCheckedNumberChange(int checkedNumber) {
-            switch (checkedNumber) {
-                case 0:
-                    edit.setVisibility(View.INVISIBLE);
-                    delete.setVisibility(View.INVISIBLE);
-                    break;
-                case 1:
-                    edit.setVisibility(View.VISIBLE);
-                    delete.setVisibility(View.VISIBLE);
-                    break;
-                default:
-                    edit.setVisibility(View.INVISIBLE);
-                    delete.setVisibility(View.VISIBLE);
-                    break;
-            }
-        }
     }
 
 }

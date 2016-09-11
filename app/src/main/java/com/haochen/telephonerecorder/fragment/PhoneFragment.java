@@ -2,7 +2,6 @@ package com.haochen.telephonerecorder.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,14 +12,10 @@ import android.view.ViewGroup;
 import com.haochen.telephonerecorder.AddActivity;
 import com.haochen.telephonerecorder.ContactActivity;
 import com.haochen.telephonerecorder.R;
-import com.haochen.telephonerecorder.adapter.ContactAdapter;
-import com.haochen.telephonerecorder.adapter.MyAdapter;
 import com.haochen.telephonerecorder.common.Config;
+import com.haochen.telephonerecorder.common.Contact;
 import com.haochen.telephonerecorder.util.DBHelper;
 import com.haochen.telephonerecorder.util.IdBuilder;
-
-import java.io.Serializable;
-import java.sql.ResultSet;
 
 /**
  * Created by Haochen on 2016/6/30.
@@ -71,10 +66,10 @@ public class PhoneFragment extends MyFragment {
                     Bundle bundle = data.getExtras();
                     Object[] contactObj = (Object[]) bundle.getSerializable("contacts");
                     Object[] idObj = (Object[]) bundle.getSerializable("ids");
-                    ContactAdapter.Contact[] contacts = new ContactAdapter.Contact[idObj.length];
+                    Contact[] contacts = new Contact[idObj.length];
                     String[] ids = new String[idObj.length];
                     for (int i = 0; i < contactObj.length; ++i) {
-                        contacts[i] = (ContactAdapter.Contact) contactObj[i];
+                        contacts[i] = (Contact) contactObj[i];
                         ids[i] = (String) idObj[i];
                     }
 

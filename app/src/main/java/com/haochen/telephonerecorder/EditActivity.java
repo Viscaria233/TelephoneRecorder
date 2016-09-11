@@ -4,6 +4,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -12,6 +13,8 @@ import com.haochen.telephonerecorder.common.Config;
 import com.haochen.telephonerecorder.fragment.EditFragment;
 import com.haochen.telephonerecorder.fragment.EditPhoneFragment;
 import com.haochen.telephonerecorder.fragment.EditRecordFragment;
+
+import java.io.File;
 
 public class EditActivity extends AppCompatActivity {
 
@@ -27,14 +30,43 @@ public class EditActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         final Bundle bundle = intent.getExtras();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+        final FloatingActionButton confirm = (FloatingActionButton) findViewById(R.id.fab_confirm);
         switch (bundle.getInt("type")) {
-            case Config.EditType.PHONE:
+            case Config.EditType.PHONE: {
                 fragment = new EditPhoneFragment();
                 fragment.setData(bundle);
-                break;
-            case Config.EditType.RECORD:
+                confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (fragment.checkAvailable(bundle.getString("tel"))) {
+                            Bundle b = fragment.resultBundle();
+                            intent.putExtras(b);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    }
+                });
+            }
+            break;
+            case Config.EditType.RECORD: {
                 fragment = new EditRecordFragment();
                 fragment.setData(bundle);
+                findViewById(R.id.fab_confirm).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        File parent = ((File) bundle.getSerializable("old_file")).getParentFile();
+                        Bundle b = fragment.resultBundle();
+                        File newFile = new File(parent.getAbsolutePath(), b.getString("new_name"));
+                        if (fragment.checkAvailable(newFile.getAbsolutePath())) {
+                            intent.putExtras(b);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    }
+                });
+            }
+            break;
         }
         ft.replace(R.id.content_edit, fragment);
         ft.commit();
@@ -46,17 +78,7 @@ public class EditActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.fab_confirm).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (fragment.checkAvailable(bundle.getString("tel"))) {
-                    Bundle b = fragment.resultBundle();
-                    intent.putExtras(b);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-            }
-        });
+
     }
 
 }

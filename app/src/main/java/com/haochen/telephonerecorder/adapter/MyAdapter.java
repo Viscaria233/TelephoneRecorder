@@ -1,22 +1,17 @@
 package com.haochen.telephonerecorder.adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.haochen.telephonerecorder.MainActivity;
 import com.haochen.telephonerecorder.callback.OnAllCancelClickListener;
 import com.haochen.telephonerecorder.callback.OnAllCheckClickListener;
 import com.haochen.telephonerecorder.callback.OnCheckedNumberChangeListener;
 import com.haochen.telephonerecorder.callback.OnDeleteClickListener;
-import com.haochen.telephonerecorder.callback.OnEditClickListener;
 import com.haochen.telephonerecorder.fragment.BaseBatchFragment;
 import com.haochen.telephonerecorder.struct.CheckableItem;
 
@@ -28,29 +23,37 @@ import java.util.List;
 public abstract class MyAdapter<T> extends BaseAdapter {
 
     protected Context context;
-    protected List<CheckableItem<T>> list;
+    protected List<CheckableItem<T>> data;
     protected int checkedNumber;
     protected OnCheckedNumberChangeListener onCheckedNumberChangeListener;
 
-    public MyAdapter(Context context, List<CheckableItem<T>> list) {
+    public MyAdapter(Context context, List<CheckableItem<T>> data) {
         this.context = context;
-        this.list = list;
+        this.data = data;
         this.checkedNumber = 0;
     }
 
     @Override
     public int getCount() {
-        return list.size();
+        return data.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return list.get(position);
+        return data.get(position);
     }
 
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    public List<CheckableItem<T>> getData() {
+        return data;
+    }
+
+    public void setData(List<CheckableItem<T>> data) {
+        this.data = data;
     }
 
     public void setOnCheckedNumberChangeListener(
@@ -67,15 +70,15 @@ public abstract class MyAdapter<T> extends BaseAdapter {
     public abstract BaseBatchFragment createBatchFragment();
 
     public void allCheck() {
-        for (CheckableItem checkableItem : list) {
+        for (CheckableItem checkableItem : data) {
             checkableItem.setChecked(true);
         }
-        checkedNumber = list.size();
+        checkedNumber = data.size();
         onCheckedNumberChange();
     }
 
     public void allCancel() {
-        for (CheckableItem checkableItem : list) {
+        for (CheckableItem checkableItem : data) {
             checkableItem.setChecked(false);
         }
         checkedNumber = 0;
@@ -96,7 +99,7 @@ public abstract class MyAdapter<T> extends BaseAdapter {
         int n = 0;
         CheckableItem item;
         for (int i = 0; n < checkedNumber; ++i) {
-            item = list.get(i);
+            item = data.get(i);
             if (item.isChecked()) {
                 index[n++] = i;
             }
@@ -105,13 +108,13 @@ public abstract class MyAdapter<T> extends BaseAdapter {
     }
 
     public void setChecked(int position, boolean checked) {
-        if (checked != list.get(position).isChecked()) {
+        if (checked != data.get(position).isChecked()) {
             if (checked) {
                 ++checkedNumber;
             } else {
                 --checkedNumber;
             }
-            list.get(position).setChecked(checked);
+            data.get(position).setChecked(checked);
             onCheckedNumberChange();
         }
     }
@@ -120,10 +123,10 @@ public abstract class MyAdapter<T> extends BaseAdapter {
         CheckableItem checkableItem = null;
         beginDelete();
         for (int i = 0; checkedNumber > 0; ++i) {
-            checkableItem = list.get(i);
+            checkableItem = data.get(i);
             if (checkableItem.isChecked()) {
                 physicalDelete(i);
-                list.remove(checkableItem);
+                data.remove(checkableItem);
                 --i;
                 --checkedNumber;
             }
@@ -176,6 +179,7 @@ public abstract class MyAdapter<T> extends BaseAdapter {
                     checkAndUpdate();
                 }
             };
+            onCheckedNumberChange(checkedNumber);
             return view;
         }
     }

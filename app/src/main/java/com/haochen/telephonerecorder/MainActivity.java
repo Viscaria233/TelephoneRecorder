@@ -1,6 +1,5 @@
 package com.haochen.telephonerecorder;
 
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,6 +26,7 @@ import com.haochen.telephonerecorder.adapter.RecordAdapter;
 import com.haochen.telephonerecorder.callback.OnDeleteCompleteListener;
 import com.haochen.telephonerecorder.callback.OnEditClickListener;
 import com.haochen.telephonerecorder.common.Config;
+import com.haochen.telephonerecorder.common.Record;
 import com.haochen.telephonerecorder.fragment.BaseBatchFragment;
 import com.haochen.telephonerecorder.fragment.HistoryFragment;
 import com.haochen.telephonerecorder.fragment.MyFragment;
@@ -112,8 +112,9 @@ public class MainActivity extends AppCompatActivity
                 if (Config.BATCH_MODE) {
                     return true;
                 }
-                enterBatchMode();
+                adapter.checkAndUpdate();
                 adapter.setChecked(position, true);
+                enterBatchMode();
                 adapter.notifyDataSetChanged();
                 return true;
             }
@@ -208,7 +209,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!Config.BATCH_MODE) {
-                    File file = ((CheckableItem<RecordAdapter.Record>) adapter.getItem(position))
+                    File file = ((CheckableItem<Record>) adapter.getItem(position))
                             .getValue().getFile();
                     try {
                         RecordFragment fragment = ((RecordFragment) selectedFragment);
@@ -315,14 +316,11 @@ public class MainActivity extends AppCompatActivity
                         }
                         break;
                         case Config.EditType.RECORD: {
-                            File file = new File(bundle.getString("path"));
-                            String name = bundle.getString("name");
+                            File file = (File) bundle.getSerializable("old_file");
                             String newName = bundle.getString("new_name");
-                            String newPath = file.getAbsolutePath().replace(
-                                    name, newName);
-                            if (file.renameTo(new File(newPath))) {
-                                Config.Changed.RECORD = true;
-                            }
+                            File newFile = new File(file.getParentFile().getAbsolutePath(), newName);
+                            file.renameTo(newFile);
+                            Config.Changed.RECORD = true;
                         }
                         break;
                     }

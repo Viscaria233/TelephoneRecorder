@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.haochen.telephonerecorder.R;
 import com.haochen.telephonerecorder.common.Config;
+import com.haochen.telephonerecorder.common.History;
 import com.haochen.telephonerecorder.fragment.BaseBatchFragment;
 import com.haochen.telephonerecorder.struct.CheckableItem;
 import com.haochen.telephonerecorder.util.DBHelper;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 /**
  * Created by Haochen on 2016/6/30.
  */
-public class HistoryAdapter extends DBAdapter<HistoryAdapter.History> {
+public class HistoryAdapter extends DBAdapter<History> {
 
     public HistoryAdapter(Context context) {
         super(context, new ArrayList<CheckableItem<History>>(), "history");
@@ -42,10 +43,10 @@ public class HistoryAdapter extends DBAdapter<HistoryAdapter.History> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        final CheckableItem<History> item = list.get(position);
+        final CheckableItem<History> item = data.get(position);
         History history = item.getValue();
-        viewHolder.time.setText(history.time);
-        viewHolder.event.setText(history.event);
+        viewHolder.time.setText(history.getTime());
+        viewHolder.event.setText(history.getEvent());
         if (Config.BATCH_MODE) {
             viewHolder.checkBox.setVisibility(CheckBox.VISIBLE);
             viewHolder.checkBox.setChecked(item.isChecked());
@@ -70,14 +71,32 @@ public class HistoryAdapter extends DBAdapter<HistoryAdapter.History> {
 
     @Override
     public BaseBatchFragment createBatchFragment() {
-        return new HistoryBatchFragment();
+        return new MyBatchFragment() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                edit.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onCheckedNumberChange(int checkedNumber) {
+                switch (checkedNumber) {
+                    case 0:
+                        delete.setVisibility(View.INVISIBLE);
+                        break;
+                    default:
+                        delete.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+        };
     }
 
     @Override
     protected void physicalDelete(int position) {
-        CheckableItem item = list.get(position);
+        CheckableItem item = data.get(position);
         db.execSQL("DELETE FROM " + tableName + " WHERE _id = ?",
-                new Object[]{((History) item.getValue()).id});
+                new Object[]{((History) item.getValue()).getId()});
     }
 
     @Override
@@ -87,17 +106,17 @@ public class HistoryAdapter extends DBAdapter<HistoryAdapter.History> {
 
     @Override
     protected void getDataSet() {
-        list.clear();
+        data.clear();
         DBHelper helper = DBHelper.getInstance(null);
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT _id, time, event FROM " + tableName, null);
         History history;
         while (cursor.moveToNext()) {
             history = new History();
-            history.id = cursor.getString(0);
-            history.time = cursor.getString(1);
-            history.event = cursor.getString(2);
-            list.add(new CheckableItem<History>(history, false));
+            history.setId(cursor.getString(0));
+            history.setTime(cursor.getString(1));
+            history.setEvent(cursor.getString(2));
+            data.add(new CheckableItem<>(history, false));
         }
         db.close();
     }
@@ -116,32 +135,6 @@ public class HistoryAdapter extends DBAdapter<HistoryAdapter.History> {
         CheckBox checkBox;
         TextView time;
         TextView event;
-    }
-
-    public static class History {
-        String id;
-        String time;
-        String event;
-    }
-
-    public class HistoryBatchFragment extends MyBatchFragment {
-
-        public HistoryBatchFragment() {
-            super();
-            edit.setVisibility(View.INVISIBLE);
-        }
-
-        @Override
-        public void onCheckedNumberChange(int checkedNumber) {
-            switch (checkedNumber) {
-                case 0:
-                    delete.setVisibility(View.INVISIBLE);
-                    break;
-                default:
-                    delete.setVisibility(View.VISIBLE);
-                    break;
-            }
-        }
     }
 
 }

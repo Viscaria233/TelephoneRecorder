@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,16 @@ public class EditRecordFragment extends EditFragment {
 
     @Override
     public boolean checkAvailable(String origin) {
+        String n = name.getText().toString();
+        if ("".equals(n)) {
+            Snackbar.make(name, "Tel can not be empty.", Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+        File file = new File(origin);
+        if (file.exists()) {
+            Snackbar.make(name, "This file name is already exists.", Snackbar.LENGTH_LONG).show();
+            return false;
+        }
         return true;
     }
 
@@ -36,9 +47,10 @@ public class EditRecordFragment extends EditFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.edit_record, null);
+        View view = inflater.inflate(R.layout.edit_record, container, false);
         name = (EditText) view.findViewById(R.id.editText_name);
-        name.setText(data.getString("name"));
+        File file = (File) data.getSerializable("old_file");
+        name.setText(file.getName());
         return view;
     }
 }

@@ -13,12 +13,11 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <ListView
-        android:id="@+id/listView"
+    <include
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-    </ListView>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        layout="@layout/layout_order_list_view"/>
 
     <FrameLayout
         android:id="@+id/content_button_bar"

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.haochen.telephonerecorder.R;
 import com.haochen.telephonerecorder.common.Config;
+import com.haochen.telephonerecorder.common.Record;
 import com.haochen.telephonerecorder.fragment.BaseBatchFragment;
 import com.haochen.telephonerecorder.struct.CheckableItem;
 import com.haochen.telephonerecorder.util.AudioFileFilter;
@@ -26,7 +27,7 @@ import java.util.Locale;
 /**
  * Created by Haochen on 2016/6/30.
  */
-public class RecordAdapter extends MyAdapter<RecordAdapter.Record> {
+public class RecordAdapter extends MyAdapter<Record> {
 
     public RecordAdapter(Context context) {
         super(context, new ArrayList<CheckableItem<Record>>());
@@ -50,12 +51,12 @@ public class RecordAdapter extends MyAdapter<RecordAdapter.Record> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        final CheckableItem<Record> item = list.get(position);
+        final CheckableItem<Record> item = data.get(position);
         final Record record = item.getValue();
-        viewHolder.name.setText(record.file.getName());
-        viewHolder.length.setText(record.length);
-        viewHolder.size.setText(record.size);
-        viewHolder.modified.setText(record.modified);
+        viewHolder.name.setText(record.getFile().getName());
+        viewHolder.length.setText(record.getLength());
+        viewHolder.size.setText(record.getSize());
+        viewHolder.modified.setText(record.getModified());
         if (Config.BATCH_MODE) {
             viewHolder.checkBox.setVisibility(CheckBox.VISIBLE);
             viewHolder.checkBox.setChecked(item.isChecked());
@@ -80,15 +81,33 @@ public class RecordAdapter extends MyAdapter<RecordAdapter.Record> {
 
     @Override
     public BaseBatchFragment createBatchFragment() {
-        return new RecordBatchFragment();
+        return new MyBatchFragment() {
+            @Override
+            public void onCheckedNumberChange(int checkedNumber) {
+                switch (checkedNumber) {
+                    case 0:
+                        edit.setVisibility(View.INVISIBLE);
+                        delete.setVisibility(View.INVISIBLE);
+                        break;
+                    case 1:
+                        edit.setVisibility(View.VISIBLE);
+                        delete.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        edit.setVisibility(View.INVISIBLE);
+                        delete.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+        };
     }
 
     @Override
     protected void physicalDelete(int position) {
-        if (position < 0 || position >= list.size()) {
+        if (position < 0 || position >= data.size()) {
             return;
         }
-        list.get(position).getValue().file.delete();
+        data.get(position).getValue().getFile().delete();
     }
 
     @Override
@@ -98,7 +117,7 @@ public class RecordAdapter extends MyAdapter<RecordAdapter.Record> {
 
     @Override
     protected void getDataSet() {
-        list.clear();
+        data.clear();
         File path = new File(Config.Storage.RECORD_PATH);
         File[] files = path.listFiles(new AudioFileFilter());
         if (files != null) {
@@ -112,12 +131,12 @@ public class RecordAdapter extends MyAdapter<RecordAdapter.Record> {
                     player.release();
                     long time = file.lastModified();
                     Record record = new Record();
-                    record.file = file;
-                    record.length = String.format("%02d:%02d", duration / 60, duration % 60);
-                    record.size = String.format("%.2fMB", file.length() / 1024.0 / 1024);
-                    record.modified = new SimpleDateFormat(
-                            "yyyy-MM-dd HH:mm:ss", Locale.US).format(new Date(time));
-                    list.add(new CheckableItem<Record>(record, false));
+                    record.setFile(file);
+                    record.setLength(String.format("%02d:%02d", duration / 60, duration % 60));
+                    record.setSize(String.format("%.2fMB", file.length() / 1024.0 / 1024));
+                    record.setModified(new SimpleDateFormat(
+                            "yyyy-MM-dd HH:mm:ss", Locale.US).format(new Date(time)));
+                    data.add(new CheckableItem<>(record, false));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -137,10 +156,9 @@ public class RecordAdapter extends MyAdapter<RecordAdapter.Record> {
         }
         Bundle bundle = new Bundle();
         int index = getCheckedIndexArray()[0];
-        Record record = list.get(index).getValue();
+        Record record = data.get(index).getValue();
         bundle.putInt("type", Config.EditType.RECORD);
-        bundle.putString("path", record.file.getAbsolutePath());
-        bundle.putString("name", record.file.getName());
+        bundle.putSerializable("old_file", record.getFile());
         return bundle;
     }
 
@@ -150,38 +168,6 @@ public class RecordAdapter extends MyAdapter<RecordAdapter.Record> {
         TextView length;
         TextView size;
         TextView modified;
-    }
-
-    public static class Record {
-        File file;
-        String length;
-        String size;
-        String modified;
-
-        public File getFile() {
-            return file;
-        }
-    }
-
-    public class RecordBatchFragment extends MyBatchFragment {
-
-        @Override
-        public void onCheckedNumberChange(int checkedNumber) {
-            switch (checkedNumber) {
-                case 0:
-                    edit.setVisibility(View.INVISIBLE);
-                    delete.setVisibility(View.INVISIBLE);
-                    break;
-                case 1:
-                    edit.setVisibility(View.VISIBLE);
-                    delete.setVisibility(View.VISIBLE);
-                    break;
-                default:
-                    edit.setVisibility(View.INVISIBLE);
-                    delete.setVisibility(View.VISIBLE);
-                    break;
-            }
-        }
     }
 
 }
