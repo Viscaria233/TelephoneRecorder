@@ -1,18 +1,15 @@
 package com.haochen.telephonerecorder.fragment;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.haochen.telephonerecorder.MainActivity;
 import com.haochen.telephonerecorder.R;
 import com.haochen.telephonerecorder.callback.OnAllCancelClickListener;
 import com.haochen.telephonerecorder.callback.OnAllCheckClickListener;
@@ -20,6 +17,7 @@ import com.haochen.telephonerecorder.callback.OnCheckedNumberChangeListener;
 import com.haochen.telephonerecorder.callback.OnDeleteClickListener;
 import com.haochen.telephonerecorder.callback.OnDeleteCompleteListener;
 import com.haochen.telephonerecorder.callback.OnEditClickListener;
+import com.haochen.telephonerecorder.callback.OnEditCommitListener;
 
 /**
  * Created by Haochen on 2016/7/4.
@@ -29,6 +27,7 @@ public abstract class BaseBatchFragment extends Fragment implements OnCheckedNum
     protected OnAllCheckClickListener onAllCheckClickListener;
     protected OnAllCancelClickListener onAllCancelClickListener;
     protected OnEditClickListener onEditClickListener;
+    protected OnEditCommitListener onEditCommitListener;
     protected OnDeleteClickListener onDeleteClickListener;
     protected OnDeleteCompleteListener onDeleteCompleteListener;
 
@@ -48,6 +47,10 @@ public abstract class BaseBatchFragment extends Fragment implements OnCheckedNum
 
     public void setOnEditClickListener(OnEditClickListener onEditClickListener) {
         this.onEditClickListener = onEditClickListener;
+    }
+
+    public void setOnEditCommitListener(OnEditCommitListener onEditCommitListener) {
+        this.onEditCommitListener = onEditCommitListener;
     }
 
     public void setOnDeleteClickListener(OnDeleteClickListener onDeleteClickListener) {
@@ -87,6 +90,9 @@ public abstract class BaseBatchFragment extends Fragment implements OnCheckedNum
             public void onClick(View v) {
                 if (onEditClickListener != null) {
                     onEditClickListener.onEditClick();
+                    if (onEditCommitListener != null) {
+                        onEditCommitListener.onEditCommit();
+                    }
                 }
             }
         });

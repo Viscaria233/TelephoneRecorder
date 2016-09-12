@@ -45,8 +45,8 @@ public class AddActivity extends AppCompatActivity {
                 } else {
                     DBHelper helper = DBHelper.getInstance(null);
                     SQLiteDatabase db = helper.getReadableDatabase();
-                    Cursor cursor = db.rawQuery("SELECT * FROM phone WHERE tel LIKE ?",
-                            new String[]{"%" + t});
+                    Cursor cursor = db.rawQuery("SELECT * FROM phone WHERE tel = ?",
+                            new String[]{t});
                     boolean exists = cursor.moveToNext();
                     db.close();
                     if (exists) {

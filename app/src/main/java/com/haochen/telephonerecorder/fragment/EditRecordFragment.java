@@ -1,7 +1,5 @@
 package com.haochen.telephonerecorder.fragment;
 
-import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -11,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.haochen.telephonerecorder.R;
-import com.haochen.telephonerecorder.callback.OnEditCommitListener;
-import com.haochen.telephonerecorder.common.Config;
 
 import java.io.File;
 

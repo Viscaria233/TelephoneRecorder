@@ -37,6 +37,4 @@ public class Config {
         public static int FORMAT;
         public static boolean COMPRESS;
     }
-    public static boolean BATCH_MODE;
-
 }

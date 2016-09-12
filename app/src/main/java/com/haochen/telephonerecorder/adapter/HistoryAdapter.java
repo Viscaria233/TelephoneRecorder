@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,7 @@ public class HistoryAdapter extends DBAdapter<History> {
         History history = item.getValue();
         viewHolder.time.setText(history.getTime());
         viewHolder.event.setText(history.getEvent());
-        if (Config.BATCH_MODE) {
+        if (batchMode) {
             viewHolder.checkBox.setVisibility(CheckBox.VISIBLE);
             viewHolder.checkBox.setChecked(item.isChecked());
             viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
@@ -70,12 +71,14 @@ public class HistoryAdapter extends DBAdapter<History> {
     }
 
     @Override
-    public BaseBatchFragment createBatchFragment() {
+    public BaseBatchFragment getBatchFragment() {
         return new MyBatchFragment() {
+            @Nullable
             @Override
-            public void onStart() {
-                super.onStart();
+            public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+                View view = super.onCreateView(inflater, container, savedInstanceState);
                 edit.setVisibility(View.INVISIBLE);
+                return view;
             }
 
             @Override

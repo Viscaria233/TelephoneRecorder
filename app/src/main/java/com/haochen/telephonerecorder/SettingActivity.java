@@ -128,6 +128,7 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent= getIntent();
+                Log.v("haochen", "comfirm " + intent.toString());
                 Bundle bundle = new Bundle();
                 bundle.putString("path", path.getText().toString());
                 bundle.putInt("format", formatInt);

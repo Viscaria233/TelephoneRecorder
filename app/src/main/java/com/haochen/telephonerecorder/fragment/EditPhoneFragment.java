@@ -30,7 +30,7 @@ public class EditPhoneFragment extends EditFragment {
         }
         DBHelper helper = DBHelper.getInstance(null);
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM phone WHERE tel NOT LIKE ? AND tel LIKE ?",
+        Cursor cursor = db.rawQuery("SELECT * FROM phone WHERE tel <> ? AND tel = ?",
                 new String[]{origin, t});
         boolean exist = cursor.moveToNext();
         cursor.close();

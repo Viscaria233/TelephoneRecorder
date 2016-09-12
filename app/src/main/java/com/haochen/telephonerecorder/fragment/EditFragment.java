@@ -1,7 +1,8 @@
 package com.haochen.telephonerecorder.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+
 
 /**
  * Created by Haochen on 2016/7/12.

@@ -45,7 +45,7 @@ public class ContactAdapter extends MyAdapter<Contact> {
     }
 
     @Override
-    public BaseBatchFragment createBatchFragment() {
+    public BaseBatchFragment getBatchFragment() {
         return null;
     }
 

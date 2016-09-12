@@ -1,5 +1,6 @@
 package com.haochen.telephonerecorder.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,6 +22,7 @@ import com.haochen.telephonerecorder.fragment.BaseBatchFragment;
 import com.haochen.telephonerecorder.struct.CheckableItem;
 import com.haochen.telephonerecorder.util.DBHelper;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -33,7 +35,7 @@ public class PhoneAdapter extends DBAdapter<Phone> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
         if (convertView == null) {
             convertView = LayoutInflater.from(context)
@@ -62,21 +64,14 @@ public class PhoneAdapter extends DBAdapter<Phone> {
             }
         });
         viewHolder.enabled.setChecked(phone.isEnabled());
-        if (Config.BATCH_MODE) {
+        if (batchMode) {
             viewHolder.checkBox.setVisibility(View.VISIBLE);
             viewHolder.checkBox.setChecked(item.isChecked());
             viewHolder.enabled.setEnabled(false);
             viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    boolean isChecked = ((CheckBox) v).isChecked();
-                    item.setChecked(isChecked);
-                    if (isChecked) {
-                        ++checkedNumber;
-                    } else {
-                        --checkedNumber;
-                    }
-                    onCheckedNumberChange();
+                    setChecked(position, ((CheckBox) v).isChecked());
                 }
             });
         } else {
@@ -85,12 +80,14 @@ public class PhoneAdapter extends DBAdapter<Phone> {
             viewHolder.enabled.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    boolean checked = ((Switch)v).isChecked();
                     DBHelper helper = DBHelper.getInstance(null);
                     SQLiteDatabase db = helper.getWritableDatabase();
                     db.execSQL("UPDATE phone SET enabled = ? WHERE _id = ?",
-                            new Object[]{((Switch)v).isChecked() ? 1 : 0, phone.getId()});
+                            new Object[]{checked ? 1 : 0, phone.getId()});
                     db.close();
-                    Config.Changed.PHONE = true;
+//                    Config.Changed.PHONE = true;
+                    phone.setEnabled(checked);
                 }
             });
         }
@@ -98,7 +95,7 @@ public class PhoneAdapter extends DBAdapter<Phone> {
     }
 
     @Override
-    public BaseBatchFragment createBatchFragment() {
+    public BaseBatchFragment getBatchFragment() {
         return new MyBatchFragment() {
             @Override
             public void onCheckedNumberChange(int checkedNumber) {

@@ -13,23 +13,16 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <include
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        layout="@layout/layout_order_list_view"/>
+    <!--<include-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1"-->
+        <!--layout="@layout/layout_order_list_view"/>-->
 
     <FrameLayout
-        android:id="@+id/content_button_bar"
+        android:id="@+id/fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom">
-
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
-            android:visibility="invisible"/>
+        android:layout_height="match_parent">
 
     </FrameLayout>
 

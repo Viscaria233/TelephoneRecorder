@@ -27,6 +27,8 @@ public abstract class MyAdapter<T> extends BaseAdapter {
     protected int checkedNumber;
     protected OnCheckedNumberChangeListener onCheckedNumberChangeListener;
 
+    protected boolean batchMode;
+
     public MyAdapter(Context context, List<CheckableItem<T>> data) {
         this.context = context;
         this.data = data;
@@ -56,6 +58,12 @@ public abstract class MyAdapter<T> extends BaseAdapter {
         this.data = data;
     }
 
+    public boolean isBatchMode() { return batchMode; }
+
+    public void setBatchMode(boolean batchMode) {
+        this.batchMode = batchMode;
+    }
+
     public void setOnCheckedNumberChangeListener(
             OnCheckedNumberChangeListener onCheckedNumberChangeListener) {
         this.onCheckedNumberChangeListener = onCheckedNumberChangeListener;
@@ -67,7 +75,7 @@ public abstract class MyAdapter<T> extends BaseAdapter {
         }
     }
 
-    public abstract BaseBatchFragment createBatchFragment();
+    public abstract BaseBatchFragment getBatchFragment();
 
     public void allCheck() {
         for (CheckableItem checkableItem : data) {
