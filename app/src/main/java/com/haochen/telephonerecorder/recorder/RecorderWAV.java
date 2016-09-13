@@ -1,9 +1,5 @@
 package com.haochen.telephonerecorder.recorder;
 
-import android.util.Log;
-
-import com.haochen.telephonerecorder.util.WAVRecorder;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -17,6 +13,11 @@ public class RecorderWAV extends PhoneRecorder {
     public RecorderWAV(boolean compress) {
         super(compress);
         recorder = WAVRecorder.getInstanse(compress);
+    }
+
+    @Override
+    public String getOutputFormat() {
+        return ".wav";
     }
 
     @Override

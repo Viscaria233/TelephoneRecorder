@@ -1,6 +1,8 @@
 package com.haochen.telephonerecorder;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
@@ -31,6 +33,16 @@ public class MainActivity extends FixedAppCompatActivity
 
     private MyFragment fragment;
 
+    private static class Preference {
+        public static final String NAME = "config";
+        public static final String FIRST_LAUNCH = "first_launch";
+        public static final String ROOT_PATH = "root_path";
+        public static final String RECORD_PATH = "record_path";
+        public static final String LOG_FILE = "log_file";
+        public static final String FORMAT = "format";
+        public static final String COMPRESS = "compress";
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,14 +63,30 @@ public class MainActivity extends FixedAppCompatActivity
     }
 
     private void initial() {
-        Config.Storage.ROOT_PATH = Environment.getExternalStorageDirectory() + "/TelephoneRecorder";
-        Config.Storage.RECORD_PATH = Config.Storage.ROOT_PATH + "/Record";
-        Config.Storage.LOG_FILE = "log.txt";
+        SharedPreferences sp = getSharedPreferences(Preference.NAME, Activity.MODE_PRIVATE);
+
+        boolean firstLaunch = sp.getBoolean(Preference.FIRST_LAUNCH, true);
+        if (firstLaunch) {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putBoolean(Preference.FIRST_LAUNCH, false);
+            
+            String root = Environment.getExternalStorageDirectory() + "/TelephoneRecorder";
+            editor.putString(Preference.ROOT_PATH, root);
+            editor.putString(Preference.RECORD_PATH, root + "/Record");
+            editor.putString(Preference.LOG_FILE, "log.txt");
+            editor.putInt(Preference.FORMAT, Config.Recorder.FORMAT_WAV);
+            editor.putBoolean(Preference.COMPRESS, false);
+            editor.apply();
+        }
+
+        Config.Storage.ROOT_PATH = sp.getString(Preference.ROOT_PATH, "");
+        Config.Storage.RECORD_PATH = sp.getString(Preference.RECORD_PATH, "");
+        Config.Storage.LOG_FILE = sp.getString(Preference.LOG_FILE, "");
+        Config.Recorder.FORMAT = sp.getInt(Preference.FORMAT, 0);
+        Config.Recorder.COMPRESS = sp.getBoolean(Preference.COMPRESS, false);
         Config.Changed.PHONE = false;
         Config.Changed.RECORD = false;
         Config.Changed.HISTORY = false;
-        Config.Recorder.FORMAT = Config.Recorder.FORMAT_WAV;
-        Config.Recorder.COMPRESS = false;
         File file = new File(Config.Storage.RECORD_PATH);
         if (!file.exists()) {
             file.mkdirs();
@@ -194,6 +222,19 @@ public class MainActivity extends FixedAppCompatActivity
                     Config.Storage.RECORD_PATH = bundle.getString("path");
                     Config.Recorder.FORMAT = bundle.getInt("format");
                     Config.Recorder.COMPRESS = bundle.getBoolean("compress");
+
+                    SharedPreferences sp = getSharedPreferences(Preference.NAME, Activity.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.remove(Preference.RECORD_PATH);
+                    editor.remove(Preference.FORMAT);
+                    editor.remove(Preference.COMPRESS);
+
+                    editor.putString(Preference.RECORD_PATH, Config.Storage.RECORD_PATH);
+                    editor.putInt(Preference.FORMAT, Config.Recorder.FORMAT);
+                    editor.putBoolean(Preference.COMPRESS, Config.Recorder.COMPRESS);
+
+                    editor.apply();
+
                     Config.Changed.RECORD = true;
                     if (fragment instanceof RecordFragment) {
                         fragment.checkAndUpdate();

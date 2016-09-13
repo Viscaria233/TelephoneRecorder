@@ -94,9 +94,11 @@ public class SettingActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         formatInt = Config.Recorder.FORMAT_3GP;
+                        compress.setEnabled(false);
                         break;
                     case 1:
                         formatInt = Config.Recorder.FORMAT_WAV;
+                        compress.setEnabled(true);
                         break;
                 }
             }

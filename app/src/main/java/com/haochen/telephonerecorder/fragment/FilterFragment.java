@@ -126,39 +126,6 @@ public class FilterFragment extends MyFragment {
         };
     }
 
-//    @Override
-//    public boolean enterBatchMode() {
-//        if (isBatchMode()) {
-//            return false;
-//        }
-//        BaseBatchFragment fragment = adapter.getBatchFragment();
-//        fragment.setOnEditClickListener(this);
-//        fragment.setOnDeleteCompleteListener(this);
-//        adapter.setOnCheckedNumberChangeListener(fragment);
-//        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-//        ft.replace(R.id.button_bar, fragment);
-//        ft.commit();
-//        setBatchMode(true);
-//        adapter.notifyDataSetChanged();
-//        return true;
-//    }
-
-//    @Override
-//    public boolean exitBatchMode() {
-//        if (!isBatchMode()) {
-//            return false;
-//        }
-//        FixedFragment fragment = new ButtonBarFragment();
-//        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-//        ft.replace(R.id.button_bar, fragment);
-//        ft.commit();
-//        setBatchMode(false);
-//        adapter.setOnCheckedNumberChangeListener(null);
-//        adapter.allCancel();
-//        adapter.notifyDataSetChanged();
-//        return true;
-//    }
-
     public abstract class ButtonBarFragment extends Fragment {
         private FloatingActionButton contact;
         private FloatingActionButton add;

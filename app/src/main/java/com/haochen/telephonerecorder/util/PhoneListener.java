@@ -7,6 +7,10 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.haochen.telephonerecorder.common.Config;
+import com.haochen.telephonerecorder.recorder.MyFilenameBuilder;
+import com.haochen.telephonerecorder.recorder.Recorder3GP;
+import com.haochen.telephonerecorder.recorder.RecorderManager;
+import com.haochen.telephonerecorder.recorder.RecorderWAV;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -94,6 +98,16 @@ public class PhoneListener extends PhoneStateListener {
                         RecorderManager recorder = RecorderManager.getInstance();
                         recorder.setTel(incomingNumber);
                         recorder.setType(RecorderManager.TYPE_IN);
+                        recorder.setOutputDirectory(new File(Config.Storage.RECORD_PATH));
+                        recorder.setFilenameBuilder(new MyFilenameBuilder());
+                        switch (Config.Recorder.FORMAT) {
+                            case Config.Recorder.FORMAT_3GP:
+                                recorder.setPhoneRecorder(new Recorder3GP());
+                                break;
+                            case Config.Recorder.FORMAT_WAV:
+                                recorder.setPhoneRecorder(new RecorderWAV(Config.Recorder.COMPRESS));
+                                break;
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -20,6 +20,11 @@ public class Recorder3GP extends PhoneRecorder {
     }
 
     @Override
+    public String getOutputFormat() {
+        return ".3gp";
+    }
+
+    @Override
     public void setOutputFile(File file) {
         recorder.setOutputFile(file.getAbsolutePath());
     }

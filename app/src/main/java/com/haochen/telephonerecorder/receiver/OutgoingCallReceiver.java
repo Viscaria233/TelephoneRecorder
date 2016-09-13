@@ -8,9 +8,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.haochen.telephonerecorder.common.Config;
+import com.haochen.telephonerecorder.common.Phone;
+import com.haochen.telephonerecorder.recorder.MyFilenameBuilder;
+import com.haochen.telephonerecorder.recorder.Recorder3GP;
+import com.haochen.telephonerecorder.recorder.RecorderWAV;
 import com.haochen.telephonerecorder.util.DBHelper;
 import com.haochen.telephonerecorder.util.DateUtil;
-import com.haochen.telephonerecorder.util.RecorderManager;
+import com.haochen.telephonerecorder.recorder.RecorderManager;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -51,9 +55,21 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
                         Log.v("haochen", "[" + time + "] Start recorder......");
                         fw.write("[" + time + "] Start recorder......\n");
                         fw.flush();
+
                         recorder.setTel(tel);
                         recorder.setType(RecorderManager.TYPE_OUT);
+                        recorder.setOutputDirectory(new File(Config.Storage.RECORD_PATH));
+                        recorder.setFilenameBuilder(new MyFilenameBuilder());
+                        switch (Config.Recorder.FORMAT) {
+                            case Config.Recorder.FORMAT_3GP:
+                                recorder.setPhoneRecorder(new Recorder3GP());
+                                break;
+                            case Config.Recorder.FORMAT_WAV:
+                                recorder.setPhoneRecorder(new RecorderWAV(Config.Recorder.COMPRESS));
+                                break;
+                        }
                         recorder.start();
+
                         time = DateUtil.getDateTime();
                         Log.v("haochen", "[" + time + "] Success! Record started. " +
                                 "Save as " + recorder.getOutputFile().getAbsolutePath());

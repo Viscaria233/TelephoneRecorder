@@ -81,7 +81,7 @@ public class RecordFragment extends MyFragment {
                         comparator = new Comparator<Record>() {
                             @Override
                             public int compare(Record lhs, Record rhs) {
-                                return lhs.getModified().compareTo(rhs.getModified());
+                                return rhs.getModified().compareTo(lhs.getModified());
                             }
                         };
                         break;

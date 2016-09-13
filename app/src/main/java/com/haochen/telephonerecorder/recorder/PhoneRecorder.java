@@ -11,6 +11,8 @@ public abstract class PhoneRecorder {
     public PhoneRecorder(boolean compress) {
     }
 
+    public abstract String getOutputFormat();
+
     public abstract void setOutputFile(File file);
     public abstract void prepare() throws IOException;
     public abstract void start();
