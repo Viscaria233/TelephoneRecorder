@@ -13,7 +13,7 @@ import com.haochen.telephonerecorder.callback.OnAllCheckClickListener;
 import com.haochen.telephonerecorder.callback.OnCheckedNumberChangeListener;
 import com.haochen.telephonerecorder.callback.OnDeleteClickListener;
 import com.haochen.telephonerecorder.fragment.BaseBatchFragment;
-import com.haochen.telephonerecorder.struct.CheckableItem;
+import com.haochen.telephonerecorder.common.CheckableItem;
 
 import java.util.List;
 

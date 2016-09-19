@@ -1,6 +1,5 @@
 package com.haochen.telephonerecorder.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,10 +18,9 @@ import com.haochen.telephonerecorder.R;
 import com.haochen.telephonerecorder.common.Config;
 import com.haochen.telephonerecorder.common.Phone;
 import com.haochen.telephonerecorder.fragment.BaseBatchFragment;
-import com.haochen.telephonerecorder.struct.CheckableItem;
-import com.haochen.telephonerecorder.util.DBHelper;
+import com.haochen.telephonerecorder.common.CheckableItem;
+import com.haochen.telephonerecorder.sqlite.DBHelper;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**

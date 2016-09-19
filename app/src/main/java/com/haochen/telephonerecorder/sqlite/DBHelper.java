@@ -1,14 +1,8 @@
-package com.haochen.telephonerecorder.util;
+package com.haochen.telephonerecorder.sqlite;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.text.format.DateUtils;
-import android.util.TimeUtils;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by Haochen on 2016/6/30.
@@ -42,16 +36,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 "_id TEXT PRIMARY KEY," +
                 "time TEXT NOT NULL," +
                 "event TEXT NOT NULL)");
-
-//        String[][] t = {
-//                {"xxx", "15927231362"},
-//                {"曲洁", "13326699598"},
-//                {"费梦嫄", "13871117982"}
-//        };
-//        for (int i = 0; i < 3; ++i) {
-//            db.execSQL("INSERT INTO phone VALUES (?, ?, ?, ?)",
-//                    new Object[]{i, t[i][0], t[i][1], 1});
-//        }
     }
 
     @Override

@@ -16,7 +16,7 @@ import com.haochen.telephonerecorder.callback.OnDeleteCompleteListener;
 import com.haochen.telephonerecorder.callback.OnEditClickListener;
 import com.haochen.telephonerecorder.callback.OnEditCommitListener;
 import com.haochen.telephonerecorder.common.Config;
-import com.haochen.telephonerecorder.util.DBHelper;
+import com.haochen.telephonerecorder.sqlite.DBHelper;
 
 import java.io.File;
 

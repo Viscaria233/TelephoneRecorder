@@ -23,9 +23,9 @@ import com.haochen.telephonerecorder.adapter.PhoneAdapter;
 import com.haochen.telephonerecorder.common.Config;
 import com.haochen.telephonerecorder.common.Contact;
 import com.haochen.telephonerecorder.common.Phone;
-import com.haochen.telephonerecorder.struct.CheckableItem;
-import com.haochen.telephonerecorder.util.DBHelper;
-import com.haochen.telephonerecorder.util.IdBuilder;
+import com.haochen.telephonerecorder.common.CheckableItem;
+import com.haochen.telephonerecorder.sqlite.DBHelper;
+import com.haochen.telephonerecorder.sqlite.IdBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.haochen.telephonerecorder.R;
 import com.haochen.telephonerecorder.adapter.RecordAdapter;
 import com.haochen.telephonerecorder.common.Record;
-import com.haochen.telephonerecorder.struct.CheckableItem;
+import com.haochen.telephonerecorder.common.CheckableItem;
 
 import java.io.File;
 import java.io.IOException;

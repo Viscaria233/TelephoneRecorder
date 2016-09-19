@@ -3,8 +3,8 @@ package com.haochen.telephonerecorder.adapter;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.haochen.telephonerecorder.struct.CheckableItem;
-import com.haochen.telephonerecorder.util.DBHelper;
+import com.haochen.telephonerecorder.common.CheckableItem;
+import com.haochen.telephonerecorder.sqlite.DBHelper;
 
 import java.util.List;
 

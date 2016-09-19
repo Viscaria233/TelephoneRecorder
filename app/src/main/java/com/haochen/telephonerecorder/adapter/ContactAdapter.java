@@ -16,9 +16,9 @@ import android.widget.TextView;
 import com.haochen.telephonerecorder.R;
 import com.haochen.telephonerecorder.common.Contact;
 import com.haochen.telephonerecorder.fragment.BaseBatchFragment;
-import com.haochen.telephonerecorder.struct.CheckableItem;
-import com.haochen.telephonerecorder.util.DBHelper;
-import com.haochen.telephonerecorder.util.IdBuilder;
+import com.haochen.telephonerecorder.common.CheckableItem;
+import com.haochen.telephonerecorder.sqlite.DBHelper;
+import com.haochen.telephonerecorder.sqlite.IdBuilder;
 
 import java.util.ArrayList;
 

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.haochen.telephonerecorder.R;
-import com.haochen.telephonerecorder.util.DBHelper;
+import com.haochen.telephonerecorder.sqlite.DBHelper;
 
 /**
  * Created by Haochen on 2016/7/12.

@@ -1,7 +1,9 @@
-package com.haochen.telephonerecorder.util;
+package com.haochen.telephonerecorder.sqlite;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.haochen.telephonerecorder.sqlite.DBHelper;
 
 import java.util.Calendar;
 

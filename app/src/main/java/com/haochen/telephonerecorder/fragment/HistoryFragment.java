@@ -18,7 +18,7 @@ import android.widget.Spinner;
 import com.haochen.telephonerecorder.R;
 import com.haochen.telephonerecorder.adapter.HistoryAdapter;
 import com.haochen.telephonerecorder.common.History;
-import com.haochen.telephonerecorder.struct.CheckableItem;
+import com.haochen.telephonerecorder.common.CheckableItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;

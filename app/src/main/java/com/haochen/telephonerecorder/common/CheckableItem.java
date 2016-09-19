@@ -1,4 +1,4 @@
-package com.haochen.telephonerecorder.struct;
+package com.haochen.telephonerecorder.common;
 
 /**
  * Created by Haochen on 2016/7/6.

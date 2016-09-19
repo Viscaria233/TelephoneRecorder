@@ -22,9 +22,9 @@ import com.haochen.telephonerecorder.fragment.FilterFragment;
 import com.haochen.telephonerecorder.fragment.HistoryFragment;
 import com.haochen.telephonerecorder.fragment.MyFragment;
 import com.haochen.telephonerecorder.fragment.RecordFragment;
-import com.haochen.telephonerecorder.receiver.OutgoingCallReceiver;
-import com.haochen.telephonerecorder.util.DBHelper;
-import com.haochen.telephonerecorder.util.PhoneListener;
+import com.haochen.telephonerecorder.monitor.OutgoingCallReceiver;
+import com.haochen.telephonerecorder.sqlite.DBHelper;
+import com.haochen.telephonerecorder.monitor.PhoneListener;
 
 import java.io.File;
 
@@ -144,9 +144,9 @@ public class MainActivity extends FixedAppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         final int id = item.getItemId();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
                 fragment.exitBatchMode();
                 if (id == R.id.nav_filter) {
                     showFilterView();
@@ -161,8 +161,8 @@ public class MainActivity extends FixedAppCompatActivity
                 } else if (id == R.id.nav_about) {
                     showAboutView();
                 }
-            }
-        }).start();
+//            }
+//        }).start();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

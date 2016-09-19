@@ -15,8 +15,8 @@ import com.haochen.telephonerecorder.R;
 import com.haochen.telephonerecorder.common.Config;
 import com.haochen.telephonerecorder.common.History;
 import com.haochen.telephonerecorder.fragment.BaseBatchFragment;
-import com.haochen.telephonerecorder.struct.CheckableItem;
-import com.haochen.telephonerecorder.util.DBHelper;
+import com.haochen.telephonerecorder.common.CheckableItem;
+import com.haochen.telephonerecorder.sqlite.DBHelper;
 
 import java.util.ArrayList;
 
