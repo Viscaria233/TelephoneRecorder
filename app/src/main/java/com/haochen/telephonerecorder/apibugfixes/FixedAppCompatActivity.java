@@ -28,16 +28,12 @@ public class FixedAppCompatActivity extends AppCompatActivity {
         }
 
         try {
-            if ((requestCode&0xffff0000) != 0) {
+            if ((requestCode & 0xffff0000) != 0) {
                 throw new IllegalArgumentException("Can only use lower 16 bits for requestCode");
             }
 
             FragmentActivity activity = fragment.getActivity();
-            List<Integer> index = new FragmentTracer(activity, fragment).trace();
-            int[] trace = new int[index.size()];
-            for (int i = 0; i < index.size(); ++i) {
-                trace[i] = index.get(i);
-            }
+            int[] trace = FragmentTracer.trace(activity, fragment);
 
             Bundle bundle = intent.getExtras();
             if (bundle == null) {
@@ -93,23 +89,17 @@ public class FixedAppCompatActivity extends AppCompatActivity {
         }
     }
 
-    private class FragmentTracer {
-        private FragmentActivity activity;
-        private Fragment fragment;
-        private Stack<Integer> stack;
+    private static class FragmentTracer {
+        private static Stack<Integer> stack;
 
-        public FragmentTracer(FragmentActivity activity, Fragment fragment) throws NoSuchFieldException {
-            this.activity = activity;
-            this.fragment = fragment;
-        }
-
-        public List<Integer> trace() throws NoSuchFieldException, IllegalAccessException {
+        public static int[] trace(FragmentActivity activity, Fragment fragment)
+                throws NoSuchFieldException, IllegalAccessException {
             stack = new Stack<>();
             FragmentManager fm = activity.getSupportFragmentManager();
             List<Fragment> frags = fm.getFragments();
             for (Fragment f : frags) {
                 stack.push(getIndex(f));
-                if (recurse(f)) {
+                if (tryTracing(f, fragment)) {
                     break;
                 }
                 stack.pop();
@@ -123,18 +113,24 @@ public class FixedAppCompatActivity extends AppCompatActivity {
             while (!temp.isEmpty()) {
                 index.add(temp.pop());
             }
-            return index;
+
+            int[] trace = new int[index.size()];
+            for (int i = 0; i < index.size(); ++i) {
+                trace[i] = index.get(i);
+            }
+            return trace;
         }
 
-        private boolean recurse(Fragment frag) throws NoSuchFieldException, IllegalAccessException {
-            if (frag == fragment) {
+        private static boolean tryTracing(Fragment frag, Fragment actual)
+                throws NoSuchFieldException, IllegalAccessException {
+            if (frag == actual) {
                 return true;
             }
 
             List<Fragment> frags = frag.getChildFragmentManager().getFragments();
             for (Fragment f : frags) {
                 stack.push(getIndex(frag));
-                if (recurse(f)) {
+                if (tryTracing(f, actual)) {
                     return true;
                 }
                 stack.pop();
@@ -143,36 +139,25 @@ public class FixedAppCompatActivity extends AppCompatActivity {
             return false;
         }
 
-        private int getIndex(Fragment frag)
+        private static int getIndex(Fragment frag)
                 throws NoSuchFieldException, IllegalAccessException {
-            return IndexUtil.getInstance().getIndex(frag);
+            return IndexUtil.getIndex(frag);
         }
     }
 
     private static class IndexUtil {
-        private static IndexUtil instance;
+        private static Field field;
 
-        private Class c;
-        private Field field;
-
-        public static IndexUtil getInstance() {
-            if (instance == null) {
-                try {
-                    instance = new IndexUtil();
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                }
+        static {
+            try {
+                field = Fragment.class.getDeclaredField("mIndex");
+                field.setAccessible(true);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
             }
-            return instance;
         }
 
-        private IndexUtil() throws NoSuchFieldException {
-            c = Fragment.class;
-            field = c.getDeclaredField("mIndex");
-            field.setAccessible(true);
-        }
-
-        public int getIndex(Fragment frag) throws IllegalAccessException {
+        public static int getIndex(Fragment frag) throws IllegalAccessException {
             return field.getInt(frag);
         }
     }
