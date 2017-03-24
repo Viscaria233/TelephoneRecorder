@@ -105,18 +105,14 @@ public class FixedAppCompatActivity extends AppCompatActivity {
                 stack.pop();
             }
 
-            Stack<Integer> temp = new Stack<>();
+            Stack<Integer> reversed = new Stack<>();
             while (!stack.isEmpty()) {
-                temp.push(stack.pop());
-            }
-            List<Integer> index = new ArrayList<>();
-            while (!temp.isEmpty()) {
-                index.add(temp.pop());
+                reversed.push(stack.pop());
             }
 
-            int[] trace = new int[index.size()];
-            for (int i = 0; i < index.size(); ++i) {
-                trace[i] = index.get(i);
+            int[] trace = new int[reversed.size()];
+            for (int i = 0; i < trace.length; ++i) {
+                trace[i] = reversed.pop();
             }
             return trace;
         }
