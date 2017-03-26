@@ -117,16 +117,16 @@ public class FixedAppCompatActivity extends AppCompatActivity {
             return trace;
         }
 
-        private static boolean tryTracing(Fragment frag, Fragment actual)
+        private static boolean tryTracing(Fragment frag, Fragment target)
                 throws NoSuchFieldException, IllegalAccessException {
-            if (frag == actual) {
+            if (frag == target) {
                 return true;
             }
 
             List<Fragment> frags = frag.getChildFragmentManager().getFragments();
             for (Fragment f : frags) {
                 stack.push(getIndex(frag));
-                if (tryTracing(f, actual)) {
+                if (tryTracing(f, target)) {
                     return true;
                 }
                 stack.pop();
